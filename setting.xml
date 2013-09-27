@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<setting>
+	<password>fe7a490696d9ba6418f92014e4e08bfd</password>
+	<mail_sender>
+		<mail_host>smtp.gmail.com:587</mail_host>
+		<mail_user>wuxibeita</mail_user>
+		<mail_pass>wxbt0510</mail_pass>
+		<mail_postfix>gmail.com</mail_postfix>
+		<mail_subject>lcms: </mail_subject>
+		<mail_context>If you have any questions, please keep in touch.</mail_context>
+	</mail_sender>
+	<mail_list>
+		<bad>qshi@biortus.com;dxu@biortus.com</bad>
+		<abo>527919789@qq.com</abo>
+	</mail_list>
+	<paths>
+		<inputpath>\\Beita-pc\D\</inputpath>
+		<outputpath>d:\lcms\data\</outputpath>
+		<logpath>d:\lcms\log\</logpath>
+	</paths>
+</setting>
