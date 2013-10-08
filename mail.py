@@ -47,7 +47,7 @@ qshi@biortus.com;dxu@biortus.com
         smtp.starttls()
         #smtp.connect(MAIL_HOST,MAIL_PORT)
 
-        print 'login...'
+        print 'loginning...'
         smtp.login(mail_user, mail_pass)
 
         print 'sending...'

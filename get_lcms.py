@@ -126,10 +126,7 @@ if __name__=='__main__':
             if cmd=='exit':sys.exit(0)
             #帮助
             if cmd=='help':
-                print '1. copy/move path1 path2(from path1 to path2)'
-                print '2. analysis path logfile(analysis path, put result to logfile)'
-                print '3. exit'
-                print '4. help'
+                print commands
                 continue
             #检查未发送的报告
             if cmd=='find':
@@ -169,8 +166,12 @@ if __name__=='__main__':
             #查看log文件
             if cmd=='log':
                 print 'files in',logfile
-                logs=files.readlogs(logfile)                
-                print_log(logs)
+                logs=files.readlogs(logfile)
+                if len(cmds)==1:
+                    print_log(logs)
+                else:
+                    print_log(getfilesbeginwith(logs,cmds[1]))
+                    
             #设置获取报告的日期
             if cmd=='set':
                 if len(cmds)==1:

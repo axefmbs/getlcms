@@ -6,7 +6,7 @@
 		<mail_user>wuxibeita</mail_user>
 		<mail_pass>wxbt0510</mail_pass>
 		<mail_postfix>gmail.com</mail_postfix>
-		<mail_subject>lcms: </mail_subject>
+		<mail_subject>Reports: </mail_subject>
 		<mail_context>If you have any questions, please keep in touch.</mail_context>
 	</mail_sender>
 	<mail_list>
