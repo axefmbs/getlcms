@@ -50,12 +50,15 @@ def output_path(outputpath,year=time.strftime("%Y"),month=time.strftime("%m"),da
     year,month,day=str(year),str(month),str(day)
     return outputpath+year+'-'+month+'-'+day
 
-def listsub(list1,list2):
+def listsub(logs,reports):
     '''两个列表相减'''
-    l1,l2=len(list1),len(list2)
-    if l1>=l2:
-        return list(set(list1)-set(list2))
-    return list(set(list2)-set(list1))
+    return [report for report in reports if report not in logs]    
+            
+    #l1,l2=len(list1),len(list2)
+    #if l1>=l2:
+    #    return list(set(list1)-set(list2))
+    #return list(set(list2)-set(list1))
+    
     #return [item for item in list2 if item not in list1]
            
     #l1,l2=len(list1),len(list2)
@@ -148,7 +151,7 @@ if __name__=='__main__':
                 #print reports
                 logs=files.readlogs(logfile)
                 #print logs
-                sublogs=listsub(logs,reports)
+                sublogs=[report for report in reports if report not in logs]
                 if len(sublogs)>0:
                     files.writelog(reports,logfile)
                     files.copyfiles(reports,outputpath)
