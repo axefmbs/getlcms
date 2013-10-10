@@ -42,16 +42,18 @@ def lcms_path(rootpath,year=time.strftime("%Y"),month=time.strftime("%m"),day=ti
     year,month,day=str(year),str(month),str(day)
     return rootpath+year+'\\'+year+month+'\\'+year+'-'+month+'-'+day
 def logfile_path(logpath,year=time.strftime("%Y"),month=time.strftime("%m"),day=time.strftime("%d")):
+    '''返回咯疙文件路径'''
     year,month,day=str(year),str(month),str(day)
     
     return logpath+year+'-'+month+'-'+day+'.log'
 
 def output_path(outputpath,year=time.strftime("%Y"),month=time.strftime("%m"),day=time.strftime("%d")):
+    '''返回输出文件夹路径'''
     year,month,day=str(year),str(month),str(day)
     return outputpath+year+'-'+month+'-'+day
 
 def listsub(logs,reports):
-    '''两个列表相减'''
+    '''弃用 两个列表相减'''
     return [report for report in reports if report not in logs]    
             
     #l1,l2=len(list1),len(list2)
@@ -113,14 +115,14 @@ if __name__=='__main__':
     lcmspath,logfile,outputpath=inits[0],inits[1],inits[2]
  
     print 'let\'s working...'
-    commands=['get','see','log','send','find','del','set','to','exit','help']
+    commands=['get','see','log','sent','find','del','set','to','exit','help']
     while(1):
         #exit
         cmds=raw_input('>>>').lower().strip().split(' ')
         cmd=cmds[0]
         
         if cmd not in commands:
-            print cmd,'is not a command.'
+            print '"',cmd,'" is not a command.'
             continue
         
         if len(cmds)>=1:
@@ -138,9 +140,9 @@ if __name__=='__main__':
                 if len(cmds)==1:                    
                     print_list(checks)
                 else:
-                    if cmds[1] not in mail_list.keys():
-                        print cmds[1],'is not a maillist'
-                        continue
+                    #if cmds[1] not in mail_list.keys():
+                    #    print cmds[1],'is not a maillist'
+                    #    continue
                     begins=getfilesbeginwith(checks,cmds[1])
                     print_list(begins)                           
                         
@@ -151,7 +153,9 @@ if __name__=='__main__':
                 #print reports
                 logs=files.readlogs(logfile)
                 #print logs
+                
                 sublogs=[report for report in reports if report not in logs]
+                
                 if len(sublogs)>0:
                     files.writelog(reports,logfile)
                     files.copyfiles(reports,outputpath)
@@ -186,14 +190,17 @@ if __name__=='__main__':
                 else:
                     #设置自己的时间，如2013-09-27或者20130927
                     try:
+                        #解析日期
                         if '-' in cmds[1]:
                             date=time.strptime(cmds[1],'%Y-%m-%d')
                         else:
                             date=time.strptime(cmds[1],'%Y%m%d')
+                            
                         year=date.tm_year
                         month=str(date.tm_mon)
                         if len(month)==1:month='0'+month
-                        day=str(date.tm_mday)
+
+                        day=str(date.tm_mday)                        
                         if len(day)==1:day='0'+day
                         
                         del inits
@@ -203,23 +210,27 @@ if __name__=='__main__':
                     except:
                         print cmds[1],'is not a date string.'
             #发送邮件
-            if cmd=='send':
+            if cmd=='sent':
                 if len(cmds)==1:
                     print 'please set a email or a maillist.'
                     continue                
                 if cmds[1] in mail_list.keys():
                     #发送到邮件列表
-                    print 'send...'
+                    print 'sent...'
                     subject=mail_sender['mail_subject']+files.filename(logfile)
                     content=mail_sender['mail_context']
                     attments=getfilesbeginwith(files.getfiles(outputpath,'pdf'),cmds[1])
+                    #logs=files.readlogs(logfile)
+                    
                     mail.send_mail(mail_sender,mail_list[cmds[1]],subject,content, attments)                    
                 elif files.ismail(cmds[1]):
                     #发送到具体的邮件
-                    print 'send...'                    
+                    print 'sent...'                    
                     subject=mail_sender['mail_subject']+files.filename(logfile)
                     content=mail_sender['mail_context']
                     attments=files.getfiles(outputpath,'pdf')
+                    #logs=files.readlogs(logfile)
+                    
                     mail.send_mail(mail_sender,cmds[1],subject,content, attments)
                 else:
                     print '"',cmds[1],'" is not a email or a set maillist.'
