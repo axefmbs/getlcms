@@ -1,5 +1,5 @@
 #-*-coding:utf8-*-
-import time,md5,os,sys
+import datetime,time,md5,os,sys
 
 import setting as setting
 import file_functions as files
@@ -122,7 +122,7 @@ if __name__=='__main__':
     lcmspath,logfile,outputpath=inits[0],inits[1],inits[2]
  
     print 'let\'s working...'
-    commands=['get','see','log','sent','find','del','set','to','exit','help']
+    commands=['get','see','log','sent','find','del','sta','set','to','exit','help']
     while(1):
         #exit
         cmds=raw_input('>>>').lower().strip().split(' ')
@@ -241,6 +241,77 @@ if __name__=='__main__':
                     mail.send_mail(mail_sender,cmds[1],subject,content, attments)
                 else:
                     print '"',cmds[1],'" is not a email or a set maillist.'
+            #统计
+            if cmd=='sta':
+                if len(cmds)<3:
+                    print 'please input like as "sta *** 2013-10-12 2013-11-12"'
+                    continue
+                key,strstartdate,strenddate=cmds[1],cmds[2],cmds[3]
+                
+                #解析开始时间
+                try:
+                    startdate=datetime.datetime.fromtimestamp(time.mktime(time.strptime(strstartdate,"%Y-%m-%d")))
+                except:
+                    startdate=datetime.datetime.fromtimestamp(time.mktime(time.strptime(strstartdate,"%Y%m%d")))
+
+                #解析结束时间    
+                try:
+                    enddate=datetime.datetime.fromtimestamp(time.mktime(time.strptime(strenddate,"%Y-%m-%d")))
+                except:
+                    enddate=datetime.datetime.fromtimestamp(time.mktime(time.strptime(strenddate,"%Y%m%d")))
+
+                #设置报告文件路径    
+                outfile=paths['logpath']+key+' '+cmds[2]+' to '+cmds[3]+'.sta'
+
+                #关键字长度
+                keylen=len(key)
+                #总的报告数量
+                allcounts=0
+                while(1):
+                    #分解日期
+                    year=str(startdate.year)
+                    month=str(startdate.month)
+                    if len(month)==1:month='0'+month
+                    day=str(startdate.day)
+                    if len(day)==1:day='0'+day
+
+                    #设置lcms路径
+                    lcmspath=lcms_path(paths['inputpath'],year,month,day)
+                    print 'Statistics...',startdate
+
+                    #获取全部以key开头的报告
+                    reports=[files.filename(report) for report in files.getfiles(lcmspath,'pdf') if files.filename(report)[:keylen].lower()==key.lower()]
+
+                    #当前报告数量
+                    currentlen=len(reports)
+                    try:
+                        FILE=open(outfile,'a')
+                    except:
+                        FILE=open(outfile,'w')
+
+                    outstr='>>>%s：共做样%s个\n' % (str(startdate.year)+'年'+str(startdate.month)+'月'+str(startdate.day)+'日',currentlen)
+                    print outstr
+                    FILE.write(outstr)
+                    if currentlen>0:
+                        allcounts+=currentlen
+                        c=0                        
+                        for item in reports:
+                            c+=1
+                            outstr='%2s. %s\n' % (c,item)
+                            print outstr
+                            FILE.write(outstr)
+                        FILE.close()
+                    FILE.close()
+                    
+                    startdate+=datetime.timedelta(days=1)
+                    if startdate>=enddate:
+                        FILE=open(outfile,'a')
+                        outstr='\n>>>%s至%s之间，共做样%s个' % (cmds[2],cmds[3],allcounts)
+                        print outstr
+                        FILE.write(outstr)
+                        FILE.close()
+                        break
+                #FILE.close()
             #删除文件
             if cmd=='del':
                 print 'del...'

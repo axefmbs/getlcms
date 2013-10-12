@@ -1,5 +1,5 @@
 #-*-coding:utf8-*-
-import os,shutil,re
+import datetime,time,os,shutil,re
 
 def getfiles(rootpath,filetype='all'):
     #if os.path.isdir(rootpath)==False:return False
@@ -86,7 +86,84 @@ def ismail(email):
         if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", email) != None:
             return True
         return False
+def statistics(cmds):
 
+    if len(cmds)<3:
+        print 'please input like as "sta *** 2013-10-12 2013-11-12"'
+        return False
+    key,strstartdate,strenddate=cmds[1],cmds[2],cmds[3]
+
+    try:
+        startdate=datetime.datetime.fromtimestamp(time.mktime(time.strptime(strstartdate,"%Y-%m-%d")))
+    except:
+        startdate=datetime.datetime.fromtimestamp(time.mktime(time.strptime(strstartdate,"%Y%m%d")))
+    try:
+        enddate=datetime.datetime.fromtimestamp(time.mktime(time.strptime(strenddate,"%Y-%m-%d")))
+    except:
+        enddate=datetime.datetime.fromtimestamp(time.mktime(time.strptime(strenddate,"%Y%m%d")))
+    print startdate.year,startdate.month,startdate.day
+    print enddate.year,enddate.month,enddate.day
+    while(1):
+        print startdate
+        year=str(startdate.year)
+        month=str(startdate.month)
+        if len(month)==1:month='0'+month
+        day=str(startdate.day)
+        if len(day)==1:day='0'+day
+        print type(year)
+        startdate+=datetime.timedelta(days=1)
+        if startdate>=enddate:
+            break
+
+
+''' 
+    if '-' in startdate:
+        startdate=time.strptime(startdate,'%Y-%m-%d')
+    else:
+        startdate=time.strptime(startdate,'%Y%m%d')
+
+    if '-' in enddate:
+        enddate=time.strptime(enddate,'%Y-%m-%d')
+    else:
+        enddate=time.strptime(enddate,'%Y%m%d')
+
+    year1=startdate.tm_year
+    month1=str(startdate.tm_mon)
+    if len(month1)==1:month1='0'+month1    
+    day1=str(startdate.tm_mday)
+    if len(day1)==1:day1='0'+day1\
+
+    year2=startdate.tm_year
+    month2=str(startdate.tm_mon)
+    if len(month2)==1:month2='0'+month2    
+    day2=str(startdate.tm_mday)
+    if len(day2)==1:day2='0'+day2
+
+    startdate=datetime.date(int(year1), int(month1), int(day1))
+    enddate=datetime.date(int(year2), int(month2), int(day2))
+
+    while(1):
+        startdate+=datetime.timedelta(days=1)
+        if startdate>=enddate:
+            break
+
+        year=startdate.tm_year
+        month=str(startdate.tm_mon)
+        if len(month)==1:month='0'+month
+
+        day=str(startdate.tm_mday)
+        if len(day)==1:day='0'+day
+
+        print 'now is','%s-%s-%s' % (year,month,day)
+'''
+    #del inits
+
+    #inits=init(paths,year,month,day)
+
+    #lcmspath,logfile,outputpath=inits[0],inits[1],inits[2]
+
+    
+    #print key,startdate,enddate
 if __name__=='__main__':
     rootpath=r'e:\test'
     #print getfiles(rootpath,'txt')
