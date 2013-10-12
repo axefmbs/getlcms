@@ -35,16 +35,18 @@ def init(paths,year=time.strftime("%Y"),month=time.strftime("%m"),day=time.strft
     return lcmspath,logfile,outputpath
     
 def lcms_path(rootpath,year=time.strftime("%Y"),month=time.strftime("%m"),day=time.strftime("%d")):
-    '''获取当前的lcms路径
+    '''
+    获取当前的lcms路径
     按照日期分类保存，每天一个文件夹，文件夹以日期命名
     \\Beita-pc\D\2013\201309\2013-09-25保存的是2013年9月25日的lcms信息
-    默认获取当天信息'''
+    默认获取当天信息
+    '''
     year,month,day=str(year),str(month),str(day)
     return rootpath+year+'\\'+year+month+'\\'+year+'-'+month+'-'+day
+
 def logfile_path(logpath,year=time.strftime("%Y"),month=time.strftime("%m"),day=time.strftime("%d")):
-    '''返回咯疙文件路径'''
-    year,month,day=str(year),str(month),str(day)
-    
+    '''返回log文件路径'''
+    year,month,day=str(year),str(month),str(day)    
     return logpath+year+'-'+month+'-'+day+'.log'
 
 def output_path(outputpath,year=time.strftime("%Y"),month=time.strftime("%m"),day=time.strftime("%d")):
@@ -84,12 +86,17 @@ def print_log(logs):
 
 def getfilesbeginwith(items,key):
     '''获得文件名以key开头的文件'''
-    current_reports=[]
+    #current_reports=[]
     klen=len(key)
-    for file in items:
-        if key==files.filename(file)[:klen]:
-            current_reports.append(file)
-    return current_reports
+    return [file for file in items if files.filename(file)[:klen]==key]
+    #for file in items:
+    #    if key==files.filename(file)[:klen]:
+    #        current_reports.append(file)
+    #return current_reports
+
+def getfilebykey(items,key):
+    '''获得文件名中含有key的文件'''
+    return [file for file in items if key in files.filename(file)]
 
 if __name__=='__main__':
     #year = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -157,8 +164,8 @@ if __name__=='__main__':
                 sublogs=[report for report in reports if report not in logs]
                 
                 if len(sublogs)>0:
-                    files.writelog(reports,logfile)
-                    files.copyfiles(reports,outputpath)
+                    files.writelog(sublogs,logfile)
+                    files.copyfiles(sublogs,outputpath)
                 else:
                     print '0 report get.'
             #查看全部的lcms

@@ -9,6 +9,7 @@ def getfiles(rootpath,filetype='all'):
             for file in files:
                 file_list.append(os.path.join(root,file))
         return file_list
+        #return [os.path.join(root,file) for file in os.listdir(rootpath) if os.path.isfile(os.path.join(rootpath,file))]
     else:
         for root,dirs,files in os.walk(rootpath):
             for file in files:
@@ -16,9 +17,13 @@ def getfiles(rootpath,filetype='all'):
                 if os.path.splitext(file)[1][1:]==filetype:
                     file_list.append(os.path.join(root,file))
         return file_list
+
 def getdirs(rootpath,):
     #if os.path.isdir(rootpath)==False:return False
-    return [os.path.join(rootpath,elem) for elem in os.listdir(rootpath) if os.path.isdir(os.path.join(rootpath,elem))]
+    try:
+        return [os.path.join(rootpath,elem) for elem in os.listdir(rootpath) if os.path.isdir(os.path.join(rootpath,elem))]
+    except:
+        return []
             
     #dir_list=[]
     #for elem in os.listdir(rootpath):
@@ -49,21 +54,33 @@ def delfiles(files):
     print '%s files is deleted!' % c
     
 def filename(filepath):
-    '''.\abc\123.txt
-    return 123.txt'''
+    '''
+    input: .\abc\123.txt
+    return: 123.txt
+    '''
     return os.path.basename(filepath)
 
 def writelog(logs,logfile):
-    FILE=open(logfile,'a')
+    try:
+        #如果log文件存在并正确读取，则打开文件并追加内容
+        FILE=open(logfile,'a')
+    except:
+        #如果log文件不存在或不正确读取，则新建文件并写入内容
+        FILE=open(logfile,'w')
     for log in logs:
         FILE.write(log+'\n')
     FILE.close()
     
 def readlogs(logfile):
-    logs=[]
-    for log in open(logfile,'rb+').readlines():
-        logs.append(log.strip())
-    return logs
+    try:
+        #如果log文件存在
+        #for log in open(logfile,'rb+').readlines():
+        #        logs.append(log.strip())
+        #return logs
+        return [log.strip() for log in open(logfile,'rb+').readlines()]
+    except:
+        #如果log文件不存在
+        return []
 def ismail(email):
     if len(email) > 7:
         if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", email) != None:
